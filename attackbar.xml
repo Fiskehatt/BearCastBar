@@ -1,0 +1,154 @@
+﻿ <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/">
+ <Script file="Attackbar.lua"/>
+ <Frame name="abar_core">
+	<Scripts>
+		<OnLoad>
+			this:RegisterEvent("CHAT_MSG_COMBAT_SELF_MISSES");
+			this:RegisterEvent("CHAT_MSG_COMBAT_SELF_HITS");
+			this:RegisterEvent("PLAYER_LEAVE_COMBAT")
+			this:RegisterEvent("VARIABLES_LOADED")
+			this:RegisterEvent("CHAT_MSG_SPELL_SELF_DAMAGE")
+			
+			this:RegisterEvent("CHAT_MSG_COMBAT_CREATURE_VS_SELF_HITS");
+			this:RegisterEvent("CHAT_MSG_COMBAT_CREATURE_VS_SELF_MISSES");
+			this:RegisterEvent("CHAT_MSG_COMBAT_HOSTILEPLAYER_HITS")
+			this:RegisterEvent("CHAT_MSG_COMBAT_HOSTILEPLAYER_MISSES")
+		</OnLoad> 
+	<OnEvent>
+		Abar_event(event)
+	</OnEvent> 
+  </Scripts>
+  </Frame>
+	<Frame name="Abar_Frame" toplevel="true" enableMouse="true" movable = "true" parent="UIParent">
+		<Size>
+			<AbsDimension x="263" y="32"/>
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER">
+				<Offset>
+					<AbsDimension x="0" y="0"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Backdrop name="Abar_Backdrop" bgFile="Interface\TutorialFrame\TutorialFrameBackground" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+			<TileSize>
+				<AbsValue val="14"/>
+			</TileSize>
+			<EdgeSize>
+				<AbsValue val="14"/>
+			</EdgeSize>
+			<BackgroundInsets>
+				<AbsInset left="4" right="4" top="4" bottom="4"/>
+			</BackgroundInsets>
+		</Backdrop>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="Abar_Text" inherits="GameFontNormal" text="attackbar anchor">
+					<Anchors>
+						<Anchor point="TOP"> 
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnMouseDown>
+				if ((arg1 == "LeftButton")) then
+					this:StartMoving();
+				end
+			</OnMouseDown>
+			
+			<OnMouseUp>
+				if(arg1 == "LeftButton") then
+					this:StopMovingOrSizing();
+				end
+			</OnMouseUp>
+			<OnLoad>
+				Abar_Frame:Show()
+				Abar_Frame:Hide()
+			</OnLoad>
+		</Scripts>
+		
+		
+	</Frame>
+<GameTooltip name="Abar_Tooltip" hidden="true" inherits="GameTooltipTemplate">
+	<Scripts>
+     <Onload>
+       this:SetOwner(this, "ANCHOR_NONE");
+     </Onload>
+	</Scripts>
+</GameTooltip>
+
+  <StatusBar name="AbarBar" hidden="true" drawLayer="BORDER" parent="Abar_Frame" virtual="true" toplevel="true">
+
+
+
+		<Size>
+			<AbsDimension x="255" y="6"/>
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER">
+				<Offset>
+					<AbsDimension x="20" y="20"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture setAllPoints="true">
+					<Color r="0" g="0" b="0" a=".5"/>
+				</Texture>		
+			</Layer>
+			<Layer level="ARTWORK">
+				<FontString name="$parentText" inherits="GameFontHighlight">
+					<Size>
+						<AbsDimension x="255" y="6"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOP">
+							<Offset>
+								<AbsDimension x="0" y="10"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTmr" inherits="GameFontHighlight">
+					<Size>
+						<AbsDimension x="255" y="6"/>
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT">
+							<Offset>
+								<AbsDimension x="110" y="10"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+			<Layer level="OVERLAY">
+				<Texture name="$parentSpark" file="Interface\CastingBar\UI-CastingBar-Spark" alphaMode="ADD">
+					<Size>
+						<AbsDimension x="18" y="9"/>
+					</Size>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnUpdate>
+				Abar_Update()
+			</OnUpdate>
+		</Scripts>
+		<BarTexture file="Interface\TargetingFrame\UI-StatusBar"/>
+		<BarColor r="1.0" g="1.0" b="1.0"/>
+  </StatusBar>  
+<StatusBar name="Abar_Mhr" inherits="AbarBar" parent="UIParent"/>
+<StatusBar name="Abar_Oh" inherits="AbarBar" parent="UIParent"/>
+
+</Ui>
