@@ -8,3 +8,5 @@ A cool cast bar and swing timer that takes into account latency.
 ![image](https://user-images.githubusercontent.com/17283626/36480050-db23c360-1745-11e8-8062-0de7f3c38d44.png)
 
 Type /bear for in-game options.
+
+**Author: Kuroneko**
