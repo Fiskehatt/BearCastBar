@@ -108,6 +108,7 @@ function bcb.ShowColorPicker(r, g, b, a, changedCallback)
     ColorPickerFrame:SetColorRGB(r,g,b);
     ColorPickerFrame.hasOpacity, ColorPickerFrame.opacity = (a ~= nil), a;
     ColorPickerFrame.previousValues = {r,g,b,a};
+    ColorPickerFrame:SetFrameStrata("High")
     ColorPickerFrame.func, ColorPickerFrame.opacityFunc, ColorPickerFrame.cancelFunc = 
     changedCallback, changedCallback, changedCallback;
     ColorPickerFrame:Hide(); -- Need to run the OnShow handler.
@@ -153,6 +154,7 @@ function bcb:ADDON_LOADED(name)
             BCB_SAVED.customCastBarTexture = BCB_DEFAULTS.customCastBarTexture
             BCB_SAVED.barColor = BCB_DEFAULTS.barColor
             BCB_SAVED.debug = false
+            BCB_SAVED.abar_is_enabled = true
 
             bcb.debug("Variable load failed. Using defaults.")
         end
@@ -191,7 +193,11 @@ function bcb:ADDON_LOADED(name)
         
         if(BCB_SAVED.debug == nil) then
             BCB_SAVED.debug = false
-        end                        
+        end
+        
+        if(BCB_SAVED.abar_is_enabled == nil) then
+            BCB_SAVED.abar_is_enabled = true
+        end
 
     end    
 end
@@ -472,7 +478,7 @@ function bcb:PLAYER_ENTERING_WORLD()
     self.configFrame.attackBarConfigFrame.title:SetParent(self.configFrame.attackBarConfigFrame)    
 
     self.configFrame.attackBarConfigFrame.unlockCheckbox = CreateFrame("CheckButton", "bcb_GlobalCheckbox_UnlockAttackBar", self.configFrame.attackBarConfigFrame, "UICheckButtonTemplate");
-    self.configFrame.attackBarConfigFrame.unlockCheckbox:SetPoint("BOTTOM",self.configFrame.attackBarConfigFrame, -10, 5)
+    self.configFrame.attackBarConfigFrame.unlockCheckbox:SetPoint("TOPLEFT",self.configFrame.attackBarConfigFrame, 10, -65)
     self.configFrame.attackBarConfigFrame.unlockCheckbox:SetFrameStrata("HIGH")
     bcb_GlobalCheckbox_UnlockAttackBarText:SetText("Lock attack timer bar")
 
@@ -488,6 +494,28 @@ function bcb:PLAYER_ENTERING_WORLD()
             -- unlock bar  
             SlashCmdList["ATKBAR"]("unlock")
         end          
+    end)
+
+    -- disable attack bar
+
+    self.configFrame.attackBarConfigFrame.disableCheckbox = CreateFrame("CheckButton", "bcb_GlobalCheckbox_DisableCheckbox", self.configFrame.attackBarConfigFrame, "UICheckButtonTemplate");
+    self.configFrame.attackBarConfigFrame.disableCheckbox:SetPoint("TOPLEFT",self.configFrame.attackBarConfigFrame, 10, -35)
+    self.configFrame.attackBarConfigFrame.disableCheckbox:SetFrameStrata("HIGH")
+    bcb_GlobalCheckbox_DisableCheckboxText:SetText("Attack bar enabled")
+
+    if (BCB_SAVED.abar_is_enabled == true) then
+        self.configFrame.attackBarConfigFrame.disableCheckbox:SetChecked(true)
+    end 
+
+    self.configFrame.attackBarConfigFrame.disableCheckbox:SetScript("OnClick", function()
+          
+        if self.configFrame.attackBarConfigFrame.disableCheckbox:GetChecked() then
+            -- enable bar
+            SlashCmdList["ATKBAR"]("enable")
+        else
+            -- disable bar 
+            SlashCmdList["ATKBAR"]("disable")
+        end      
     end)
 
 
