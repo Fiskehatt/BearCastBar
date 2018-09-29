@@ -1,12 +1,29 @@
 # BearCastBar
 A cool cast bar and swing timer that takes into account latency.
 
-![image](https://user-images.githubusercontent.com/17283626/36479865-3d97cd6c-1745-11e8-9154-23e049125d11.png)
+Type /bear or /bcb for in-game options.
 
-![image](https://user-images.githubusercontent.com/17283626/36479930-6bf66fb0-1745-11e8-8cfd-12c6afe2631f.png)
+**Original author: Kuroneko**
 
-![image](https://user-images.githubusercontent.com/17283626/36480050-db23c360-1745-11e8-8062-0de7f3c38d44.png)
+### Cast bar
 
-Type /bear for in-game options.
+![casting](https://user-images.githubusercontent.com/17283626/46246049-8712cb00-c400-11e8-9313-24981db88d6f.gif) ![channeling](https://user-images.githubusercontent.com/17283626/46246051-8a0dbb80-c400-11e8-906d-96e1386476af.gif) 
 
-**Author: Kuroneko**
+The red area indicates where the cast will actually take off. For example, you can start moving when the cast bar reaches that area and the cast will still take off. This is useful especially for players with high latency. However, the red area is not always fully accurate and that is why you need to adjust the lag protection setting (see the image below).
+
+### Attack bar
+
+**Melee attacks**
+
+![melee](https://user-images.githubusercontent.com/17283626/46246048-84b07100-c400-11e8-999d-15da78273535.gif)
+
+**Hunter abilities**
+
+![hunter](https://user-images.githubusercontent.com/17283626/46246050-8843f800-c400-11e8-824b-e29ea6b0a9df.gif) ![aimed](https://user-images.githubusercontent.com/17283626/46246054-8bd77f00-c400-11e8-8023-da0c738842a9.gif)
+
+**Throwable weapons**
+
+![thrown](https://user-images.githubusercontent.com/17283626/46246053-8b3ee880-c400-11e8-87d0-e38ab52f29dc.gif)
+
+Feel free to develop the addon further. 
+
