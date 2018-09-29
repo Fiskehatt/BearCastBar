@@ -11,8 +11,6 @@ Type /bear or /bcb for in-game options.
 
 The red area indicates where the cast will actually take off. For example, you can start moving when the cast bar reaches that area and the cast will still take off. This is useful especially for players with high latency. However, the red area is not always fully accurate and that is why you need to adjust the lag protection setting (see the image below).
 
-![image](https://user-images.githubusercontent.com/17283626/46246060-9e51b880-c400-11e8-96a3-1326ec4db16b.png)
-
 ### Attack bar
 
 **Melee attacks**
@@ -28,6 +26,16 @@ The red area indicates where the cast will actually take off. For example, you c
 ![thrown](https://user-images.githubusercontent.com/17283626/46246053-8b3ee880-c400-11e8-87d0-e38ab52f29dc.gif)
 
 The cast bars look choppy because of the poor GIF quality.
+
+### Options
+
+![image](https://user-images.githubusercontent.com/17283626/46246060-9e51b880-c400-11e8-96a3-1326ec4db16b.png)
+
+Options:
+
+- Lag protection: reduces the size of the red area to ensure that you can finish casts.
+- Disable attack bar: disables the whole attack bar (in case you want to use another swing timer)
+- Disable hunter abilities: disables auto-shot, aimed shot and multi-shot (in case you want to use another hunter timer)
 
 Feel free to develop the addon further. 
 
