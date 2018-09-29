@@ -1,4 +1,4 @@
-﻿ <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/">
+ <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/">
  <Script file="Attackbar.lua"/>
  <Frame name="abar_core">
 	<Scripts>
@@ -13,6 +13,9 @@
 			this:RegisterEvent("CHAT_MSG_COMBAT_CREATURE_VS_SELF_MISSES");
 			this:RegisterEvent("CHAT_MSG_COMBAT_HOSTILEPLAYER_HITS")
 			this:RegisterEvent("CHAT_MSG_COMBAT_HOSTILEPLAYER_MISSES")
+
+			this:RegisterEvent("START_AUTOREPEAT_SPELL")
+			this:RegisterEvent("STOP_AUTOREPEAT_SPELL")
 		</OnLoad> 
 	<OnEvent>
 		Abar_event(event)
