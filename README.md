@@ -9,7 +9,7 @@ Type /bear or /bcb for in-game options.
 
 ![casting](https://user-images.githubusercontent.com/17283626/46246049-8712cb00-c400-11e8-9313-24981db88d6f.gif) ![channeling](https://user-images.githubusercontent.com/17283626/46246051-8a0dbb80-c400-11e8-906d-96e1386476af.gif) 
 
-The red area indicates where the cast will actually take off. For example, you can start moving when the cast bar reaches that area and the cast will still take off. This is useful especially for players with high latency. However, the red area is not always fully accurate and that is why you need to adjust the lag protection setting (see the image below).
+The red area indicates where the cast will actually take off. For example, you can start moving when the cast bar reaches that area and the cast will still take off. This is useful especially for players with high latency. However, the red area is not always fully accurate and that is why you need to adjust the lag protection setting (see the options image below).
 
 ### Attack bar
 
