@@ -25,5 +25,7 @@ The red area indicates where the cast will actually take off. For example, you c
 
 ![thrown](https://user-images.githubusercontent.com/17283626/46246053-8b3ee880-c400-11e8-87d0-e38ab52f29dc.gif)
 
+The cast bars look choppy because of the poor GIF quality.
+
 Feel free to develop the addon further. 
 
