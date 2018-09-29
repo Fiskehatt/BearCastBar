@@ -11,6 +11,8 @@ Type /bear or /bcb for in-game options.
 
 The red area indicates where the cast will actually take off. For example, you can start moving when the cast bar reaches that area and the cast will still take off. This is useful especially for players with high latency. However, the red area is not always fully accurate and that is why you need to adjust the lag protection setting (see the image below).
 
+![image](https://user-images.githubusercontent.com/17283626/46246060-9e51b880-c400-11e8-96a3-1326ec4db16b.png)
+
 ### Attack bar
 
 **Melee attacks**
