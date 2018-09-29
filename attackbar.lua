@@ -115,11 +115,17 @@ function Abar_chat(msg)
 		abar.h2h = true
 		abar.timer = true
 		BCB_SAVED.abar_is_enabled = true
+	elseif msg=="huntoff" then
+		BCB_SAVED.hunter_is_enabled = false
+	elseif msg=="hunton" then
+		BCB_SAVED.hunter_is_enabled = true
 	else
 		DEFAULT_CHAT_FRAME:AddMessage('lock - to lock and hide the anchor');
 		DEFAULT_CHAT_FRAME:AddMessage('unlock - to unlock and show the anchor');
 		DEFAULT_CHAT_FRAME:AddMessage('disable - to disable the attack bar');
 		DEFAULT_CHAT_FRAME:AddMessage('enable - to enable the attack bar');
+		DEFAULT_CHAT_FRAME:AddMessage('huntoff - to disable the hunter abilities');
+		DEFAULT_CHAT_FRAME:AddMessage('hunton - to enable the hunter abilities');
 	end
 end
 
@@ -185,7 +191,7 @@ function Abar_spellhit(arg1)
 	
 	rs,rhd,rld =UnitRangedDamage("player");
 	rhd,rld= rhd-math.mod(rhd,1),rld-math.mod(rld,1)
-	if spell == "Auto Shot" and abar.range == true then
+	if spell == "Auto Shot" and abar.range == true and BCB_SAVED.hunter_is_enabled then
 		last_auto_hit = GetTime()
 		trs=rs-SWINGTIME
 		rs = rs-math.mod(rs,0.01)-SWINGTIME
@@ -234,7 +240,7 @@ function abar_spelldir(spellname)
 		trs=rs
 		rs = rs-math.mod(rs,0.01)
 		Abar_Mhrs(trs-1,"X-Bow "..(rs).."s",1,.1,.1)
-	elseif spellname == "Aimed Shot" then
+	elseif spellname == "Aimed Shot" and BCB_SAVED.hunter_is_enabled then
 		trs=3
 		-- Speed checking from Aviana/YaHT
 		for i=1,32 do
@@ -266,7 +272,7 @@ function abar_spelldir(spellname)
 		end
 		--bcb:SPELLCAST_START("Aimed Shot", trs*1000+200)
 		Abar_Mhrs(trs+0.2,"Aimed Shot "..(rs).."s",1,.1,.1) -- Some extra time because the release seems to be delayed on Aimed shot
-	elseif spellname == "Multi-Shot" then
+	elseif spellname == "Multi-Shot" and BCB_SAVED.hunter_is_enabled then
 		trs = 0.5
 		rs = 0.5
 		Abar_Mhrs(0.5,"Multi-Shot "..(rs).."s",1,.1,.1)

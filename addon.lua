@@ -155,6 +155,7 @@ function bcb:ADDON_LOADED(name)
             BCB_SAVED.barColor = BCB_DEFAULTS.barColor
             BCB_SAVED.debug = false
             BCB_SAVED.abar_is_enabled = true
+            BCB_SAVED.hunter_is_enabled = true
 
             bcb.debug("Variable load failed. Using defaults.")
         end
@@ -198,6 +199,11 @@ function bcb:ADDON_LOADED(name)
         if(BCB_SAVED.abar_is_enabled == nil) then
             BCB_SAVED.abar_is_enabled = true
         end
+
+        if(BCB_SAVED.hunter_is_enabled == nil) then
+            BCB_SAVED.hunter_is_enabled = true
+        end
+        
 
     end    
 end
@@ -515,6 +521,28 @@ function bcb:PLAYER_ENTERING_WORLD()
         else
             -- disable bar 
             SlashCmdList["ATKBAR"]("disable")
+        end      
+    end)
+
+    -- disable for hunters
+
+    self.configFrame.attackBarConfigFrame.hunterCheckbox = CreateFrame("CheckButton", "bcb_GlobalCheckbox_HunterCheckbox", self.configFrame.attackBarConfigFrame, "UICheckButtonTemplate");
+    self.configFrame.attackBarConfigFrame.hunterCheckbox:SetPoint("TOPLEFT",self.configFrame.attackBarConfigFrame, 10, -95)
+    self.configFrame.attackBarConfigFrame.hunterCheckbox:SetFrameStrata("HIGH")
+    bcb_GlobalCheckbox_HunterCheckboxText:SetText("Hunter abilities enabled")
+
+    if (BCB_SAVED.hunter_is_enabled == true) then
+        self.configFrame.attackBarConfigFrame.hunterCheckbox:SetChecked(true)
+    end 
+
+    self.configFrame.attackBarConfigFrame.hunterCheckbox:SetScript("OnClick", function()
+            
+        if self.configFrame.attackBarConfigFrame.hunterCheckbox:GetChecked() then
+            -- enable bar
+            SlashCmdList["ATKBAR"]("hunton")
+        else
+            -- disable bar 
+            SlashCmdList["ATKBAR"]("huntoff")
         end      
     end)
 
