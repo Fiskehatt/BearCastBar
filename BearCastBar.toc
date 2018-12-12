@@ -1,9 +1,11 @@
 ## Interface: 11200
 ## Title: Bear Cast Bar 1.1
 ## Notes: Replaces default cast bar. Latency spell cancel support. Attack timers.
+## Notes-ruRU: Заменяет панель произнесения. Поддержка задержки заклинаний. Таймеры атаки.
 ## Author: Kuroneko
 ## OptionalDeps:
 ## SavedVariables:
 ## SavedVariablesPerCharacter: BCB_SAVED
 addon.lua
 attackbar.xml
+localization.lua

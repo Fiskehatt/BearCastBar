@@ -19,12 +19,18 @@ BCB_DEFAULTS.lagProtection = 0.1
 BCB_DEFAULTS.customCastBarTexture = "flat"
 BCB_DEFAULTS.barColor = {r=0.75, g=.5, b=0, a=1.0} --0.75, .5, 0, 1.0
 
-
 bcb.frame = CreateFrame("FRAME", "BearCastBar", UIParent)
 bcb.frame:SetScript("OnEvent", function() bcb[event](bcb, arg1, arg2) end)
 bcb.frame:SetScript("OnUpdate", function() bcb["OnUpdate"]() end)
 bcb.frame:RegisterEvent("PLAYER_ENTERING_WORLD")
 bcb.frame:RegisterEvent("ADDON_LOADED")
+
+BearCastBar.L = setmetatable({}, {__index = function(t, k)
+	local v = tostring(k)
+	rawset(t, k, v)
+	return v
+end})
+local L = BearCastBar.L
 
 function SlashCmdList.BCB(msg, editbox)
     
@@ -225,7 +231,8 @@ function bcb:PLAYER_ENTERING_WORLD()
 
     --- config frame
 
-    self.configFrame = CreateFrame("FRAME", nil, UIParent)
+    self.configFrame = CreateFrame("FRAME", "BearCastBar_ConfigFrame", UIParent)
+		table.insert(UISpecialFrames, self.configFrame:GetName()) -- provides close frame on escape pressed
     self.configFrame:SetFrameStrata("LOW")
     self.configFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
     self.configFrame:SetHeight(300)
@@ -248,18 +255,14 @@ function bcb:PLAYER_ENTERING_WORLD()
     self.configFrameTitle:SetShadowColor(0,0,0,1.0)
     self.configFrameTitle:SetWidth(200)
     self.configFrameTitle:SetHeight(16)
-    self.configFrameTitle:SetText("BearCastBar Options")
+    self.configFrameTitle:SetText(L["BearCastBar Options"])
     self.configFrameTitle:SetPoint("TOP",self.configFrame,0,-8)
     self.configFrameTitle:Show()
     self.configFrameTitle:SetParent(self.configFrame)
 
 
-    self.configFrame.closeButton = CreateFrame("BUTTON", nil, self.configFrame, "UIPanelButtonTemplate") 
-    self.configFrame.closeButton:SetPoint("TOPRIGHT", self.configFrame, -7,-7)
-    self.configFrame.closeButton:SetFrameStrata("HIGH")
-    self.configFrame.closeButton:SetHeight(18)
-    self.configFrame.closeButton:SetWidth(16)
-    self.configFrame.closeButton:SetText("X")
+    self.configFrame.closeButton = CreateFrame("BUTTON", nil, self.configFrame, "UIPanelCloseButton") 
+    self.configFrame.closeButton:SetPoint("TOPRIGHT", self.configFrame, 0,0)
 
     self.configFrame.closeButton:SetScript("OnClick", function(self, button, down)
         bcb.configFrame:Hide()
@@ -287,7 +290,7 @@ function bcb:PLAYER_ENTERING_WORLD()
     self.configFrame.resizeFrame.title:SetShadowColor(0,0,0,1.0)
     --self.configFrame.resizeFrame.title:SetWidth(200)
     --self.configFrame.resizeFrame.title:SetHeight(16)
-    self.configFrame.resizeFrame.title:SetText("Cast bar")
+    self.configFrame.resizeFrame.title:SetText(L["Cast bar"])
     self.configFrame.resizeFrame.title:SetPoint("TOPLEFT",self.configFrame.resizeFrame,10,-10)
     self.configFrame.resizeFrame.title:Show()
     self.configFrame.resizeFrame.title:SetParent(self.configFrame.resizeFrame)    
@@ -302,7 +305,7 @@ function bcb:PLAYER_ENTERING_WORLD()
     self.configFrame.resizeFrame.heightSlider:SetValueStep(1)
     getglobal('BCB_HeightSliderLow'):SetText(BCB_DEFAULTS.heightMin);
     getglobal('BCB_HeightSliderHigh'):SetText(BCB_DEFAULTS.heightMax);
-    getglobal('BCB_HeightSliderText'):SetText("Height "..BCB_SAVED.height);
+    getglobal('BCB_HeightSliderText'):SetText(L["Height"].." "..BCB_SAVED.height);
     self.configFrame.resizeFrame.heightSlider:SetScript("OnValueChanged", function(self, value) 
         bcb.setHeight(bcb.configFrame.resizeFrame.heightSlider:GetValue())
     end)
@@ -317,7 +320,7 @@ function bcb:PLAYER_ENTERING_WORLD()
     self.configFrame.resizeFrame.widthSlider:SetValueStep(1)
     getglobal('BCB_WidthSliderLow'):SetText(BCB_DEFAULTS.widthMin);
     getglobal('BCB_WidthSliderHigh'):SetText(BCB_DEFAULTS.widthMax);
-    getglobal('BCB_WidthSliderText'):SetText("Width "..BCB_SAVED.width); 
+    getglobal('BCB_WidthSliderText'):SetText(L["Width"].." "..BCB_SAVED.width); 
     self.configFrame.resizeFrame.widthSlider:SetScript("OnValueChanged", function(self, value) 
         bcb.setWidth(bcb.configFrame.resizeFrame.widthSlider:GetValue())
     end)
@@ -332,11 +335,11 @@ function bcb:PLAYER_ENTERING_WORLD()
     self.configFrame.resizeFrame.lagProtection:SetMinMaxValues(BCB_DEFAULTS.lagProtectionMin,BCB_DEFAULTS.lagProtectionMax)
     self.configFrame.resizeFrame.lagProtection:SetValue(lp)
     self.configFrame.resizeFrame.lagProtection:SetValueStep(1)
-    self.configFrame.resizeFrame.lagProtection.tooltipText = "If your connection is stable set this as close to 0ms as possible.\n\nIf your casts are not going through, set this higher until you can cast reliably.\n\n100ms recommended for average connections."
+    self.configFrame.resizeFrame.lagProtection.tooltipText = L["If your connection is stable set this as close to 0ms as possible.\n\nIf your casts are not going through, set this higher until you can cast reliably.\n\n100ms recommended for average connections."]
     getglobal('BCB_LagProtectionSliderLow'):SetText(BCB_DEFAULTS.lagProtectionMin);
     getglobal('BCB_LagProtectionSliderHigh'):SetText(BCB_DEFAULTS.lagProtectionMax);
     local lp = BCB_SAVED.lagProtection*1000
-    getglobal('BCB_LagProtectionSliderText'):SetText("Lag protection "..lp.."ms"); 
+    getglobal('BCB_LagProtectionSliderText'):SetText(format(L["Lag protection %dms"], lp)); 
     self.configFrame.resizeFrame.lagProtection:SetScript("OnValueChanged", function(self, value) 
         bcb.setLagProtection(bcb.configFrame.resizeFrame.lagProtection:GetValue())
     end)
@@ -348,46 +351,58 @@ function bcb:PLAYER_ENTERING_WORLD()
     self.configFrame.customTextureLabel:SetFont(GameFontNormal:GetFont(), 10, "")
     self.configFrame.customTextureLabel:SetShadowOffset(1, -1)
     self.configFrame.customTextureLabel:SetShadowColor(0,0,0,1.0)
-    self.configFrame.customTextureLabel:SetWidth(300)
+    self.configFrame.customTextureLabel:SetWidth(230)
     self.configFrame.customTextureLabel:SetHeight(64)
-    self.configFrame.customTextureLabel:SetText("\124cffFFD800Place custom textures in: \nInterface/AddOns/BearCastBar/textures \n\nType filename without extension. Eg \"flat\"")
+		self.configFrame.customTextureLabel:SetText("|cffFFD800"..format(L["Place custom textures in: \n%s \n\nType filename without extension. Eg \"flat\""], "Interface/AddOns/BearCastBar/textures"))
     self.configFrame.customTextureLabel:SetJustifyH("LEFT")
     self.configFrame.customTextureLabel:SetJustifyV("BOTTOM")
     self.configFrame.customTextureLabel:SetPoint("TOPLEFT",self.configFrame.resizeFrame.lagProtection,0,-10)
     self.configFrame.customTextureLabel:Show()
     self.configFrame.customTextureLabel:SetParent(self.configFrame.resizeFrame)
 
-    self.configFrame.customTextureEditBox = CreateFrame("EDITBOX", nil, self.configFrame)
-    self.configFrame.customTextureEditBox:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", 
-                                            edgeFile = "Interface/Tooltips/UI-Tooltip-Border", 
-                                            tile = true, tileSize = 16, edgeSize = 16, 
-                                            insets = { left = 4, right = 4, top = 4, bottom = 4 }});
-    self.configFrame.customTextureEditBox:SetAutoFocus(false)
-    self.configFrame.customTextureEditBox:ClearFocus()                                        
-    self.configFrame.customTextureEditBox:SetBackdropBorderColor(.5,.5,.5,1);
-    self.configFrame.customTextureEditBox:SetBackdropColor(0,0,0,1);   
-    self.configFrame.customTextureEditBox:SetTextInsets(8,8,0,0)                                        
-    self.configFrame.customTextureEditBox:SetPoint("BOTTOMLEFT", self.configFrame.customTextureLabel, -3, -32)
-    self.configFrame.customTextureEditBox:SetFont(GameFontNormal:GetFont(), 10, "")
-    self.configFrame.customTextureEditBox:SetHeight(28)
-    self.configFrame.customTextureEditBox:SetWidth(170)
-    self.configFrame.customTextureEditBox:SetText(BCB_SAVED.customCastBarTexture)
-    self.configFrame.customTextureEditBox:SetFrameStrata("MEDIUM")
-
     self.configFrame.customTextureApplyButton = CreateFrame("BUTTON", nil, self.configFrame, "UIPanelButtonTemplate") 
-    self.configFrame.customTextureApplyButton:SetPoint("RIGHT", self.configFrame.customTextureEditBox, 60,0)
+    self.configFrame.customTextureApplyButton:SetPoint("TOPRIGHT", self.configFrame.customTextureLabel, "BOTTOMRIGHT", 0,-4)
     self.configFrame.customTextureApplyButton:SetFrameStrata("MEDIUM")
+    self.configFrame.customTextureApplyButton:SetText(L["Apply"])
     self.configFrame.customTextureApplyButton:SetHeight(26)
-    self.configFrame.customTextureApplyButton:SetWidth(60)
-    self.configFrame.customTextureApplyButton:SetText("Apply")
+    self.configFrame.customTextureApplyButton:SetWidth(self.configFrame.customTextureApplyButton:GetFontString():GetStringWidth() + 14)
 
     -- apply new custom texture to bar
     self.configFrame.customTextureApplyButton:SetScript("OnClick", function(self, button, down)
         BCB_SAVED.customCastBarTexture = bcb.configFrame.customTextureEditBox:GetText()
         
         bcb.bar.texture:SetTexture(CUSTOM_TEXTURE_PATH..BCB_SAVED.customCastBarTexture)
+				bcb.configFrame.customTextureEditBox:ClearFocus()
 
     end)
+		
+    self.configFrame.customTextureEditBox = CreateFrame("EDITBOX", nil, self.configFrame)
+    self.configFrame.customTextureEditBox:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", 
+                                            edgeFile = "Interface/Tooltips/UI-Tooltip-Border", 
+                                            tile = true, tileSize = 16, edgeSize = 16, 
+                                            insets = { left = 4, right = 4, top = 4, bottom = 4 }});
+    self.configFrame.customTextureEditBox:SetAutoFocus(false)                                     
+    self.configFrame.customTextureEditBox:SetBackdropBorderColor(.5,.5,.5,1);
+    self.configFrame.customTextureEditBox:SetBackdropColor(0,0,0,1);   
+    self.configFrame.customTextureEditBox:SetTextInsets(8,8,0,0)                                        
+    self.configFrame.customTextureEditBox:SetPoint("RIGHT", self.configFrame.customTextureApplyButton, "LEFT", 0, 0)
+    self.configFrame.customTextureEditBox:SetFont(GameFontNormal:GetFont(), 10, "")
+    self.configFrame.customTextureEditBox:SetHeight(28)
+    self.configFrame.customTextureEditBox:SetWidth(235 - self.configFrame.customTextureApplyButton:GetWidth())
+    self.configFrame.customTextureEditBox:SetText(BCB_SAVED.customCastBarTexture)
+    self.configFrame.customTextureEditBox:SetFrameStrata("MEDIUM")
+		self.configFrame.customTextureEditBox:SetScript('OnEditFocusGained', function()
+			this:HighlightText()
+		end)
+		self.configFrame.customTextureEditBox:SetScript('OnEscapePressed', function()
+			this:SetText(BCB_SAVED.customCastBarTexture)
+			this:ClearFocus()
+		end)
+		self.configFrame.customTextureEditBox:SetScript('OnEnterPressed', function()
+			BCB_SAVED.customCastBarTexture = this:GetText()
+			bcb.bar.texture:SetTexture(CUSTOM_TEXTURE_PATH..BCB_SAVED.customCastBarTexture)
+			this:ClearFocus()
+		end)
 
     -- end custom texture options
 
@@ -398,10 +413,9 @@ function bcb:PLAYER_ENTERING_WORLD()
 
     self.configFrame.colorWheelButton = CreateFrame("BUTTON", nil, self.configFrame, "UIPanelButtonTemplate") 
     self.configFrame.colorWheelButton:SetPoint("BOTTOMLEFT", self.configFrame.resizeFrame, 8,8)
-    self.configFrame.colorWheelButton:SetFrameStrata("HIGH")
     self.configFrame.colorWheelButton:SetHeight(26)
     self.configFrame.colorWheelButton:SetWidth(90)
-    self.configFrame.colorWheelButton:SetText("Set Colour")
+    self.configFrame.colorWheelButton:SetText(L["Set Colour"])
 
     self.configFrame.colorWheelButton:SetScript("OnClick", function(self, button, down)
         
@@ -418,9 +432,8 @@ function bcb:PLAYER_ENTERING_WORLD()
     --resize checkbox etc
 
     self.configFrame.resizeFrame.unlockCheckbox = CreateFrame("CheckButton", "bcb_GlobalCheckbox_Unlock", self.configFrame.resizeFrame, "UICheckButtonTemplate");
-    self.configFrame.resizeFrame.unlockCheckbox:SetPoint("BOTTOM",self.configFrame.resizeFrame, 5, 5)
-    self.configFrame.resizeFrame.unlockCheckbox:SetFrameStrata("HIGH")
-    bcb_GlobalCheckbox_UnlockText:SetText("Lock cast bar")
+    self.configFrame.resizeFrame.unlockCheckbox:SetPoint("BOTTOM",self.configFrame.resizeFrame, -5, 5)
+    bcb_GlobalCheckbox_UnlockText:SetText(L["Lock cast bar"])
 
     self.configFrame.resizeFrame.unlockCheckbox:SetChecked(true)
 
@@ -478,15 +491,14 @@ function bcb:PLAYER_ENTERING_WORLD()
     self.configFrame.attackBarConfigFrame.title:SetShadowColor(0,0,0,1.0)
     --self.configFrame.resizeFrame.title:SetWidth(200)
     --self.configFrame.resizeFrame.title:SetHeight(16)
-    self.configFrame.attackBarConfigFrame.title:SetText("Attack timer bar")
+    self.configFrame.attackBarConfigFrame.title:SetText(L["Attack timer bar"])
     self.configFrame.attackBarConfigFrame.title:SetPoint("TOPLEFT",self.configFrame.attackBarConfigFrame,10,-10)
     self.configFrame.attackBarConfigFrame.title:Show()
     self.configFrame.attackBarConfigFrame.title:SetParent(self.configFrame.attackBarConfigFrame)    
 
     self.configFrame.attackBarConfigFrame.unlockCheckbox = CreateFrame("CheckButton", "bcb_GlobalCheckbox_UnlockAttackBar", self.configFrame.attackBarConfigFrame, "UICheckButtonTemplate");
     self.configFrame.attackBarConfigFrame.unlockCheckbox:SetPoint("TOPLEFT",self.configFrame.attackBarConfigFrame, 10, -65)
-    self.configFrame.attackBarConfigFrame.unlockCheckbox:SetFrameStrata("HIGH")
-    bcb_GlobalCheckbox_UnlockAttackBarText:SetText("Lock attack timer bar")
+    bcb_GlobalCheckbox_UnlockAttackBarText:SetText(L["Lock attack timer bar"])
 
     self.configFrame.attackBarConfigFrame.unlockCheckbox:SetChecked(true)
 
@@ -506,8 +518,7 @@ function bcb:PLAYER_ENTERING_WORLD()
 
     self.configFrame.attackBarConfigFrame.disableCheckbox = CreateFrame("CheckButton", "bcb_GlobalCheckbox_DisableCheckbox", self.configFrame.attackBarConfigFrame, "UICheckButtonTemplate");
     self.configFrame.attackBarConfigFrame.disableCheckbox:SetPoint("TOPLEFT",self.configFrame.attackBarConfigFrame, 10, -35)
-    self.configFrame.attackBarConfigFrame.disableCheckbox:SetFrameStrata("HIGH")
-    bcb_GlobalCheckbox_DisableCheckboxText:SetText("Attack bar enabled")
+    bcb_GlobalCheckbox_DisableCheckboxText:SetText(L["Attack bar enabled"])
 
     if (BCB_SAVED.abar_is_enabled == true) then
         self.configFrame.attackBarConfigFrame.disableCheckbox:SetChecked(true)
@@ -528,8 +539,7 @@ function bcb:PLAYER_ENTERING_WORLD()
 
     self.configFrame.attackBarConfigFrame.hunterCheckbox = CreateFrame("CheckButton", "bcb_GlobalCheckbox_HunterCheckbox", self.configFrame.attackBarConfigFrame, "UICheckButtonTemplate");
     self.configFrame.attackBarConfigFrame.hunterCheckbox:SetPoint("TOPLEFT",self.configFrame.attackBarConfigFrame, 10, -95)
-    self.configFrame.attackBarConfigFrame.hunterCheckbox:SetFrameStrata("HIGH")
-    bcb_GlobalCheckbox_HunterCheckboxText:SetText("Hunter abilities enabled")
+    bcb_GlobalCheckbox_HunterCheckboxText:SetText(L["Hunter abilities enabled"])
 
     if (BCB_SAVED.hunter_is_enabled == true) then
         self.configFrame.attackBarConfigFrame.hunterCheckbox:SetChecked(true)
@@ -670,7 +680,7 @@ function bcb.setHeight(height)
     bcb.bar:SetHeight(BCB_SAVED.height)
     bcb.frame:SetHeight(BCB_SAVED.height+8)
     --bcb.frame.overlay:SetAllPoints(bcb.frame)
-    getglobal('BCB_HeightSliderText'):SetText("Height "..height);
+    getglobal('BCB_HeightSliderText'):SetText(L["Height"].." "..height);
     bcb.lagBar:SetHeight(BCB_SAVED.height)
 
 end
@@ -680,13 +690,13 @@ function bcb.setWidth(width)
     bcb.bar:SetWidth(BCB_SAVED.width)
     bcb.frame:SetWidth(BCB_SAVED.width+8)
     --bcb.frame.overlay:SetAllPoints(bcb.frame)
-    getglobal('BCB_WidthSliderText'):SetText("Width "..width);
+    getglobal('BCB_WidthSliderText'):SetText(L["Width"].." "..width);
 
 end
 
 function bcb.setLagProtection(lp)
     BCB_SAVED.lagProtection = lp/1000
-    getglobal('BCB_LagProtectionSliderText'):SetText("Lag protection "..lp.."ms");
+    getglobal('BCB_LagProtectionSliderText'):SetText(format(L["Lag protection %dms"], lp));
 
 end
 

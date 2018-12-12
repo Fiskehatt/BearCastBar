@@ -20,6 +20,7 @@ local last_auto_hit = 0
 local SWINGTIME = 0.65
 local autorepeat = false
 local reload = false
+local L = BearCastBar.L
 
 if not(abar) then abar={} end
 -- cast spell by name hook
@@ -120,12 +121,12 @@ function Abar_chat(msg)
 	elseif msg=="hunton" then
 		BCB_SAVED.hunter_is_enabled = true
 	else
-		DEFAULT_CHAT_FRAME:AddMessage('lock - to lock and hide the anchor');
-		DEFAULT_CHAT_FRAME:AddMessage('unlock - to unlock and show the anchor');
-		DEFAULT_CHAT_FRAME:AddMessage('disable - to disable the attack bar');
-		DEFAULT_CHAT_FRAME:AddMessage('enable - to enable the attack bar');
-		DEFAULT_CHAT_FRAME:AddMessage('huntoff - to disable the hunter abilities');
-		DEFAULT_CHAT_FRAME:AddMessage('hunton - to enable the hunter abilities');
+		DEFAULT_CHAT_FRAME:AddMessage(L['lock - to lock and hide the anchor']);
+		DEFAULT_CHAT_FRAME:AddMessage(L['unlock - to unlock and show the anchor']);
+		DEFAULT_CHAT_FRAME:AddMessage(L['disable - to disable the attack bar']);
+		DEFAULT_CHAT_FRAME:AddMessage(L['enable - to enable the attack bar']);
+		DEFAULT_CHAT_FRAME:AddMessage(L['huntoff - to disable the hunter abilities']);
+		DEFAULT_CHAT_FRAME:AddMessage(L['hunton - to enable the hunter abilities']);
 	end
 end
 
@@ -146,20 +147,20 @@ if offs then
 		offh = 0
 		onh = onh +1
 		ons = ons - math.mod(ons,0.01)
-		Abar_Mhrs(tons,"Main "..ons.."s",1,.1,.1)
+		Abar_Mhrs(tons,L["Main"].." "..ons..L["s"],1,.1,.1)
 	else
 		pofft = offt
 		offh = offh+1
 		onh = 0
 		ohd,old = ohd-math.mod(ohd,1),old-math.mod(old,1)
 		offs = offs - math.mod(offs,0.01)
-		Abar_Ohs(offs,"Off "..offs.."s",1,.1,.1)
+		Abar_Ohs(offs,L["Off"].." "..offs..L["s"],1,.1,.1)
 	end
 else
 	ont=GetTime()
 	tons = ons
 	ons = ons - math.mod(ons,0.01)
-	Abar_Mhrs(tons,"Main "..ons.."s",1,.1,.1)
+	Abar_Mhrs(tons,L["Main"].." "..ons..L["s"],1,.1,.1)
 end
 
 end
@@ -184,31 +185,31 @@ function Abar_event(event)
 end
 
 function Abar_spellhit(arg1)
-	a,b,spell=string.find (arg1, "Your (.+) hits")
-	if not spell then 	a,b,spell=string.find (arg1, "Your (.+) crits") end
-	if not spell then 	a,b,spell=string.find (arg1, "Your (.+) is") end
-	if not spell then	a,b,spell=string.find (arg1, "Your (.+) misses") end
+	a,b,spell=string.find (arg1, L["Your (.+) hits"])
+	if not spell then 	a,b,spell=string.find (arg1, L["Your (.+) crits"]) end
+	if not spell then 	a,b,spell=string.find (arg1, L["Your (.+) is"]) end
+	if not spell then	a,b,spell=string.find (arg1, L["Your (.+) misses"]) end
 	
 	rs,rhd,rld =UnitRangedDamage("player");
 	rhd,rld= rhd-math.mod(rhd,1),rld-math.mod(rld,1)
-	if spell == "Auto Shot" and abar.range == true and BCB_SAVED.hunter_is_enabled then
+	if spell == L["Auto Shot"] and abar.range == true and BCB_SAVED.hunter_is_enabled then
 		last_auto_hit = GetTime()
 		trs=rs-SWINGTIME
 		rs = rs-math.mod(rs,0.01)-SWINGTIME
-		Abar_Mhrs(trs,"Auto Shot "..rs.."s",1,.1,.1)
-	elseif spell == "Shoot" and abar.range==true then
+		Abar_Mhrs(trs,L["Auto Shot"].." "..rs..L["s"],1,.1,.1)
+	elseif spell == L["Shoot"] and abar.range==true then
 		trs=rs
 		rs = rs-math.mod(rs,0.01)
-		Abar_Mhrs(trs,"Wand "..ons.."s",.7,.1,1)
-	elseif (spell == "Raptor Strike" or spell == "Heroic Strike" or
-	spell == "Maul" or spell == "Cleave") and abar.h2h==true then
+		Abar_Mhrs(trs,L["Wand"].." "..ons..L["s"],.7,.1,1)
+	elseif (spell == L["Raptor Strike"] or spell == L["Heroic Strike"] or
+	spell == L["Maul"] or spell == L["Cleave"]) and abar.h2h==true then
 		hd,ld,ohd,lhd = UnitDamage("player")
 		hd,ld= hd-math.mod(hd,1),ld-math.mod(ld,1)
 		if pofft == 0 then pofft=offt end
 		pont = ont
 		tons = ons
 		ons = ons - math.mod(ons,0.01)
-		Abar_Mhrs(tons,"Main "..ons.."s",1,.1,.1)
+		Abar_Mhrs(tons,L["Maul"].." "..ons..L["s"],1,.1,.1)
 	end
 end
 
@@ -219,28 +220,28 @@ function abar_spelldir(spellname)
 
 	rs,rhd,rld =UnitRangedDamage("player");
 	rhd,rld= rhd-math.mod(rhd,1),rld-math.mod(rld,1)
-	if spellname == "Throw" then
+	if spellname == L["Throw"] then
 		trs=rs
 		rs = rs-math.mod(rs,0.01)
-		Abar_Mhrs(trs-1,"Thrown "..(rs).."s",1,.1,.1)
-	elseif spellname == "Shoot" then
+		Abar_Mhrs(trs-1,L["Throw"].." "..(rs)..L["s"],1,.1,.1)
+	elseif spellname == L["Shoot"] then
 		rs =UnitRangedDamage("player")
 		trs=rs
 		rs = rs-math.mod(rs,0.01)
-		Abar_Mhrs(trs-1,"Wand "..(rs).."s",.7,.1,1)
-	elseif spellname == "Shoot Bow" then
+		Abar_Mhrs(trs-1,L["Wand"].." "..(rs)..L["s"],.7,.1,1)
+	elseif spellname == L["Shoot Bow"] then
 		trs = rs
 		rs = rs-math.mod(rs,0.01)
-		Abar_Mhrs(trs-1,"Bow "..(rs).."s",1,.1,.1)
-	elseif spellname == "Shoot Gun" then
+		Abar_Mhrs(trs-1,L["Bow"].." "..(rs)..L["s"],1,.1,.1)
+	elseif spellname == L["Shoot Gun"] then
 		trs = rs
 		rs = rs-math.mod(rs,0.01)
-		Abar_Mhrs(trs-1,"Gun "..(rs).."s",1,.1,.1)
-	elseif spellname == "Shoot Crossbow" then
+		Abar_Mhrs(trs-1,L["Gun"].." "..(rs)..L["s"],1,.1,.1)
+	elseif spellname == L["Shoot Crossbow"] then
 		trs=rs
 		rs = rs-math.mod(rs,0.01)
-		Abar_Mhrs(trs-1,"X-Bow "..(rs).."s",1,.1,.1)
-	elseif spellname == "Aimed Shot" and BCB_SAVED.hunter_is_enabled then
+		Abar_Mhrs(trs-1,L["X-Bow"].." "..(rs)..L["s"],1,.1,.1)
+	elseif spellname == L["Aimed Shot"] and BCB_SAVED.hunter_is_enabled then
 		trs=3
 		-- Speed checking from Aviana/YaHT
 		for i=1,32 do
@@ -271,11 +272,11 @@ function abar_spelldir(spellname)
 			rs = trs-math.mod(trs,0.01) 
 		end
 		--bcb:SPELLCAST_START("Aimed Shot", trs*1000+200)
-		Abar_Mhrs(trs+0.2,"Aimed Shot "..(rs).."s",1,.1,.1) -- Some extra time because the release seems to be delayed on Aimed shot
-	elseif spellname == "Multi-Shot" and BCB_SAVED.hunter_is_enabled then
+		Abar_Mhrs(trs+0.2,L["Aimed Shot"].." "..(rs)..L["s"],1,.1,.1) -- Some extra time because the release seems to be delayed on Aimed shot
+	elseif spellname == L["Multi-Shot"] and BCB_SAVED.hunter_is_enabled then
 		trs = 0.5
 		rs = 0.5
-		Abar_Mhrs(0.5,"Multi-Shot "..(rs).."s",1,.1,.1)
+		Abar_Mhrs(0.5,L["Multi-Shot"].." "..(rs)..L["s"],1,.1,.1)
 	end
 	end
 	end
@@ -289,14 +290,14 @@ function Abar_Update()
 	tText=getglobal(this:GetName().. "Tmr")
 	if abar.timer==true then
 		left = (this.et-GetTime()) - (math.mod((this.et-GetTime()),.1))
-		if string.find(this.txt, "Auto Shot ") then
+		if string.find(this.txt, L["Auto Shot"].." ") then
 				lf = GetTime() - last_auto_hit
 				swingtime = UnitRangedDamage("player") - SWINGTIME
 			if lf > swingtime and not reload and autorepeat then
 				reload = true
 				rl_time = SWINGTIME - math.max(lf - swingtime, 0)
 				rl_time = rl_time  - math.mod(rl_time, 0.01) 	
-				Abar_Mhrs(SWINGTIME - math.max(lf - swingtime, 0),"Reloading "..(rl_time).."s",.5, 1, 0)
+				Abar_Mhrs(SWINGTIME - math.max(lf - swingtime, 0),L["Reloading"].." "..(rl_time)..L["s"],.5, 1, 0)
 			end
 		else 
 			reload = false		
